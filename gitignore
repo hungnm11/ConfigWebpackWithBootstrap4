@@ -1,0 +1,6 @@
+If you work with node projects, I like this .gitignore:
+
+# See http://help.github.com/ignore-files/ for more about ignoring files.
+
+# dependencies
+node_modules/

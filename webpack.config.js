@@ -1,5 +1,4 @@
 const path = require('path');
-// const bootstrapEntryPoints = require('./webpack.bootstrap.config.js');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const CleanWebpackPlugin = require('clean-webpack-plugin');
 const webpack = require('webpack');
