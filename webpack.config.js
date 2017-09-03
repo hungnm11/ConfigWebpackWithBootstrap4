@@ -1,5 +1,5 @@
 const path = require('path');
-const bootstrapEntryPoints = require('./webpack.bootstrap.config.js');
+// const bootstrapEntryPoints = require('./webpack.bootstrap.config.js');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const CleanWebpackPlugin = require('clean-webpack-plugin');
 const webpack = require('webpack');
@@ -20,12 +20,23 @@ const extractCSS = new ExtractTextPlugin({
 });
 
 const cssDev = [{
-  loader: "style-loader" // creates style nodes from JS strings
+  loader: 'style-loader', // inject CSS to page
 }, {
-  loader: "css-loader" // translates CSS into CommonJS
+  loader: 'css-loader', // translates CSS into CommonJS modules
 }, {
-  loader: "sass-loader" // compiles Sass to CSS
+  loader: 'postcss-loader', // Run post css actions
+  options: {
+    plugins: function () { // post css plugins, can be exported to postcss.config.js
+      return [
+        require('precss'),
+        require('autoprefixer')
+      ];
+    }
+  }
+}, {
+  loader: 'sass-loader' // compiles SASS to CSS
 }]
+
 const cssProd = extractSass.extract({
   use: [{
     loader: 'css-loader'
@@ -57,6 +68,15 @@ module.exports = {
     new webpack.HotModuleReplacementPlugin(),
     extractCSS,
     extractSass,
+    new webpack.ProvidePlugin({
+      $: 'jquery',
+      jQuery: 'jquery',
+      'window.jQuery': 'jquery',
+      Popper: ['popper.js', 'default'],
+      // In case you imported plugins individually, you must also require them here:
+      Util: "exports-loader?Util!bootstrap/js/dist/util",
+      Dropdown: "exports-loader?Dropdown!bootstrap/js/dist/dropdown",
+    }),
   ],
   output: {
     filename: '[name].bundle.js',
